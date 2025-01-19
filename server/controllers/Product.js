@@ -52,8 +52,16 @@ exports.createProduct=async(req,res)=>{
 exports.fetchAllproducts = async (req, res) => {
     // Initialize the query object for filtering
     //TODO we have to try with multiple categories -- laptops,electronics,tabs,mobiles,furniture
-    let query = Product.find(); // Start with the base query
-    let totalProductsQuery=Product.find();
+    // let query = Product.find({deleted:{$ne:true}}); // Start with the base query
+    // let totalProductsQuery=Product.find({deleted:{$ne:true}});
+
+    let condition={};
+    if(!req.query.admin){
+        condition.deleted={$ne:true};
+    }
+
+    let query=Product.find(condition);
+    let totalProductsQuery=Product.find(condition)
     
 
     
@@ -73,6 +81,9 @@ exports.fetchAllproducts = async (req, res) => {
         totalProductsQuery = totalProductsQuery.sort({ [req.query._sort]: req.query._order === "desc" ? -1 : 1 });
     }
     
+    const totalDocs=await totalProductsQuery.countDocuments().exec();
+    console.log(totalDocs);
+
     // Apply pagination if specified
     if (req.query._page && req.query._limit) {
         const pageSize = parseInt(req.query._limit, 10);
@@ -83,10 +94,9 @@ exports.fetchAllproducts = async (req, res) => {
     try {
         // Execute the final query
         const doc = await query.exec();
-        const totalDocs=await totalProductsQuery.countDocuments().exec();
-        console.log(totalDocs);
-        console.log(doc);
         
+        console.log(doc);
+        res.set("X-total-Count",totalDocs)
         
         
         return res.status(200).json({ 

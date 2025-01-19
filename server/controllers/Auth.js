@@ -4,7 +4,7 @@ exports.createUser=async(req,res)=>{
     try {
         const user=new User(req.body);
         const doc=await user.save();
-        res.status(200).json({message:"User created successfully",doc})
+        res.status(200).json({message:"User created successfully",id:doc.id,role:doc.role})
     } catch (error) {
         console.error("Error creating user");
         res.status(400).json({message:"Error creating user",error:error.message})
@@ -20,7 +20,9 @@ exports.loginUser=async(req,res)=>{
         if(req.body.password !==user.password){
             res.status(403).json({message:"Authentication failed,invalid pass"})
         }
-     res.status(201).json({message:"User login successfully",data:{id:user.id,email:user.email,name:user.email}})
+
+        //TODO- we will make addresses independent of login
+     res.status(201).json({message:"User login successfully",data:{id:user.id,role:user.role}})
 
 
     } catch (error) {
