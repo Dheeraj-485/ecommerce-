@@ -1,4 +1,4 @@
-import { addToCart, deleteFromCart, fetchCartByUser, updateCart } from "../controllers/Cart";
+const { addToCart, deleteFromCart, fetchCartByUser, updateCart } = require("../controllers/Cart");
 
 const express=require("express")
 const router=express.Router();
