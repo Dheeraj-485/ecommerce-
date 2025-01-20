@@ -24,7 +24,10 @@ const salt=crypto.randomBytes(16);
                 res.status(400).json(err);
             }else {
                 const token=jwt.sign(sanitizeUser(doc),SECRET_KEY);
-                res.status(201).json(token)
+                res.cookie('jwt',token,{
+                 expires:new Date(Date.now() + 360000),
+                 httpOnly:true
+                }).status(201).json(token)
             }
         })
     }
@@ -60,10 +63,13 @@ const salt=crypto.randomBytes(16);
 
 
 exports.loginUser=async(req,res)=>{
-    res.json({message:"Login"},req.user) // because we will directly login using create user
+    res.cookie("jwt",req.user.token,{
+        expires:new Date(Date.now() + 3600000),
+        httpOnly:true
+    }).status(201).json({message:"Login"},req.user) // because we will directly login using create user
 }
 
 
 exports.checkUser=async(req, res)=>{
-    res.json({status:"success",user:req.user});
+    res.json({ status:"success",user:req.user});
 }

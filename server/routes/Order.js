@@ -2,5 +2,7 @@ const { fetchOrderByUser, createOrder, updateOrder, deleteOrder } = require("../
 
 const express=require("express");
 const router=express.Router();
-router.get("/user/:userId",fetchOrderByUser).post("/",createOrder).patch("/:id",updateOrder).delete("/:id",deleteOrder)
+// router.get("/user/:userId",fetchOrderByUser)
+router.post("/",createOrder).patch("/:id",updateOrder).delete("/:id",deleteOrder)
+router.get("/own/",fetchOrderByUser)
 module.exports=router;
