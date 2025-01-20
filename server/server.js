@@ -22,7 +22,7 @@ const authRoutes=require("./routes/Auth")
 const cartRoutes=require("./routes/Cart")
 const orderRoutes=require("./routes/Order");
 const User = require('./models/User');
-const { isAuth, sanitizeUser,cookieExtractor } = require('./services/common');
+const { isAuth, sanitizeUser, cookieExtractor } = require('./services/common');
 
 const SECRET_KEY="SECRET_KEY";
 
@@ -77,7 +77,7 @@ passport.use(
     'local',
     new localStrategy(
         {usernameField:"email"},
-        async function(username,password,done){
+        async function(email,password,done){
         //by default passport uses username
         try {
             
@@ -98,14 +98,15 @@ passport.use(
                     return done(null,false,{message:"Invalid credentials"}); //for safety reasons
                 }
                 const token =jwt.sign(sanitizeUser(User),SECRET_KEY)
-                done(null,{token});
+                // done(null,{token});
+                done(null,{id:user.id,role:user.role})
             }
          )
          
          
 
         } catch (error) {
-            done(err);
+            done(error);
         }
     })
 )

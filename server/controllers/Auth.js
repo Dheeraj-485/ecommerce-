@@ -27,7 +27,7 @@ const salt=crypto.randomBytes(16);
                 res.cookie('jwt',token,{
                  expires:new Date(Date.now() + 360000),
                  httpOnly:true
-                }).status(201).json(token)
+                }).status(201).json({id:doc.id,roles:doc.role})
             }
         })
     }
@@ -66,10 +66,17 @@ exports.loginUser=async(req,res)=>{
     res.cookie("jwt",req.user.token,{
         expires:new Date(Date.now() + 3600000),
         httpOnly:true
-    }).status(201).json({message:"Login"},req.user) // because we will directly login using create user
+    // }).status(200).json({message:"Login"},req.user.token) // because we will directly login using create user
+    }).status(200).json(req.user.token) // because we will directly login using create user
 }
 
 
-exports.checkUser=async(req, res)=>{
-    res.json({ status:"success",user:req.user});
+exports.checkAuth=async(req, res)=>{
+
+    if(req.user){
+        res.json(req.user)
+    }else{
+        res.sendStatus(401)
+    }
+    // res.json({ status:"success",user:req.user});
 }
