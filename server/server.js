@@ -154,7 +154,7 @@ passport.deserializeUser(function (user, cb) {
   // Payments
 // This is your test secret API key.
 const stripe = require("stripe")('sk_test_51N5NLVSF2Mo4AGVvozBmb6d5td4kq0lexk43naVyOdmdzLoO4g8LLDsCFc7pT08pUjBesL0G95eP8Xv95kbOaRgU00qrTMpPnY');
-server.post("/create-payment-intent", async (req, res) => {
+app.post("/create-payment-intent", async (req, res) => {
   const { totalAmount } = req.body;
   // Create a PaymentIntent with the order amount and currency
   const paymentIntent = await stripe.paymentIntents.create({
@@ -171,7 +171,7 @@ server.post("/create-payment-intent", async (req, res) => {
 // Webhook
 // TODO: we will capture actual order after deploying out server live on public URL
 const endpointSecret = "whsec_0e1456a83b60b01b3133d4dbe06afa98f384c2837645c364ee0d5382f6fa3ca2";
-server.post('/webhook', express.raw({type: 'application/json'}), (request, response) => {
+app.post('/webhook', express.raw({type: 'application/json'}), (request, response) => {
   const sig = request.headers['stripe-signature'];
   let event;
   try {
